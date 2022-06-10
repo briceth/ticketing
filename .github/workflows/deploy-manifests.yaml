@@ -2,8 +2,10 @@ name: deploy-manifests
 
 on:
   push:
-    branches: main
-    paths: infra/**
+    branches:
+      - main
+    paths:
+      - infra/**
 
 jobs:
   build:

@@ -1,11 +1,11 @@
-name: deploy-auth
+name: deploy-tickets
 
 on:
   push:
     branches:
       - main
     paths:
-      - auth/**
+      - tickets/**
 
 jobs:
   build:
@@ -13,14 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build container image
-        run: cd auth && docker build -t briceth/auth .
+        run: cd tickets && docker build -t briceth/tickets .
       - name: Log in to docker hub
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push image to docker
-        run: docker push briceth/auth
+        run: docker push briceth/tickets
       - name: Install doctl
         uses: digitalocean/action-doctl@v2
         with:
@@ -28,4 +28,4 @@ jobs:
       - name: Save & switch DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save ticketing
       - name: Restart deployment and use last image from docker hub
-        run: kubectl rollout restart deployment auth-depl
+        run: kubectl rollout restart deployment tickets-depl

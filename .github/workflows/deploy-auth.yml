@@ -3,6 +3,7 @@ name: deploy-auth
 on:
   push:
     branches: main
+    paths: auth/**
 
 jobs:
   build:
@@ -18,3 +19,11 @@ jobs:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
       - name: Push image to docker
         run: docker push briceth/auth
+      - name: Install doctl
+        uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
+      - name: Save & switch DigitalOcean kubeconfig
+        run: doctl kubernetes cluster kubeconfig save ticketing
+      - name: Restart deployment and use last image from docker hub
+        run: kubectl rollout restart deployment auth-depl

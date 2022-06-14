@@ -44,7 +44,7 @@ build:
     - image: briceth/expiration
       context: expiration
       docker:
-        dockerfile: Dockerfile
+        dockerfile: .docker/dev/Dockerfile
       sync:
         manual:
           - src: 'src/**/*.ts'

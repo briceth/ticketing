@@ -13,7 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build container image
-        run: cd payments && docker build -t briceth/payments .
+        run: |
+          cd payments
+          docker build -t briceth/payments -f .docker/prod/Dockerfile .
       - name: Log in to docker hub
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env:

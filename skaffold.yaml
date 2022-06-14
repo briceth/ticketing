@@ -3,16 +3,16 @@ kind: Config
 deploy:
   kubectl:
     manifests:
-      - ./.infra/k8s/*
-      - ./.infra/k8s-dev/*
+      - ./infra/k8s/*
+      - ./infra/k8s-dev/*
 build:
   local:
-    push: false # do not push Dockerfile to cluster
+    push: false
   artifacts:
     - image: briceth/auth
       context: auth
       docker:
-        dockerfile: .docker/dev/Dockerfile
+        dockerfile: Dockerfile
       sync:
         manual:
           - src: 'src/**/*.ts'

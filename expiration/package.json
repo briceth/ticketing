@@ -1,33 +1,29 @@
 {
-  "name": "tickets",
+  "name": "expiration-microservice",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "ts-node-dev src/index.ts",
-    "test": "jest --watchAll --no-cache"
-  },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "setupFilesAfterEnv": [
-      "./src/test/setup.ts"
-    ]
-  },
-  "keywords": [],
-  "author": "",
+  "main": "src/index.ts",
   "license": "ISC",
+  "scripts": {
+    "dev": "ts-node-dev ./src/index.ts",
+    "start": "node ./build/index.js",
+    "build": "tsc --project ./tsconfig.build.json",
+    "test": "NODE_ENV=test jest --watchAll --no-cache --color --runInBand",
+    "test:coverage": "npm run test -- --coverage",
+    "lint": "eslint --ext .ts .",
+    "test:ci": "jest"
+  },
   "dependencies": {
     "@ms-ticketing-bth/common": "^1.0.10",
-    "@types/bull": "^3.15.8",
     "bull": "^4.8.3",
-    "node-nats-streaming": "^0.3.2",
-    "ts-node-dev": "2.0.0"
+    "node-nats-streaming": "^0.3.2"
   },
   "devDependencies": {
+    "@types/bull": "^3.15.8",
     "@types/jest": "^27.5.1",
     "jest": "^28.1.0",
     "ts-jest": "^28.0.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^4.6.4"
   }
 }

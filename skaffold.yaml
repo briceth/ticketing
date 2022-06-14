@@ -36,7 +36,7 @@ build:
     - image: briceth/orders
       context: orders
       docker:
-        dockerfile: Dockerfile
+        dockerfile: .docker/dev/Dockerfile
       sync:
         manual:
           - src: 'src/**/*.ts'

@@ -52,7 +52,7 @@ build:
     - image: briceth/payments
       context: payments
       docker:
-        dockerfile: Dockerfile
+        dockerfile: .docker/dev/Dockerfile
       sync:
         manual:
           - src: 'src/**/*.ts'

@@ -28,7 +28,7 @@ build:
     - image: briceth/tickets
       context: tickets
       docker:
-        dockerfile: Dockerfile
+        dockerfile: .docker/dev/Dockerfile
       sync:
         manual:
           - src: 'src/**/*.ts'

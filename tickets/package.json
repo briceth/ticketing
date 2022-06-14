@@ -1,23 +1,18 @@
 {
-  "name": "tickets",
+  "name": "tickets-microservice",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/index.ts",
+  "license": "ISC",
   "scripts": {
-    "start": "ts-node-dev src/index.ts",
-    "test": "jest --watchAll --no-cache",
+    "dev": "ts-node-dev ./src/index.ts",
+    "start": "node ./build/index.js",
+    "build": "tsc --project ./tsconfig.build.json",
+    "test": "NODE_ENV=test jest --watchAll --no-cache --color --runInBand",
+    "test:coverage": "npm run test -- --coverage",
+    "lint": "eslint --ext .ts .",
     "test:ci": "jest"
   },
-  "jest": {
-    "preset": "ts-jest",
-    "testEnvironment": "node",
-    "setupFilesAfterEnv": [
-      "./src/test/setup.ts"
-    ]
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "@ms-ticketing-bth/common": "^1.0.11",
     "cookie-session": "^1.4.0",
@@ -26,8 +21,7 @@
     "express-validator": "^6.14.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.3",
-    "node-nats-streaming": "^0.3.2",
-    "ts-node-dev": "2.0.0"
+    "node-nats-streaming": "^0.3.2"
   },
   "devDependencies": {
     "@types/cookie-session": "^2.0.44",
@@ -39,6 +33,7 @@
     "mongodb-memory-server": "^8.5.2",
     "supertest": "^6.2.3",
     "ts-jest": "^28.0.2",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^4.6.4"
   }
 }

@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - infra/**
+      - .infra/**
 
 jobs:
   build:
@@ -19,4 +19,6 @@ jobs:
       - name: Save & switch DigitalOcean kubeconfig
         run: doctl kubernetes cluster kubeconfig save ticketing
       - name: Apply k8s manifests to cluster
-        run: kubectl apply -f infra/k8s && kubectl apply -f infra/k8s-prod
+        run: |
+          kubectl apply -f .infra/k8s
+          kubectl apply -f .infra/k8s-prod

@@ -13,7 +13,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build container image
-        run: cd tickets && docker build -t briceth/tickets .
+        run: |
+          cd tickets
+          docker build -t briceth/tickets -f .docker/prod/Dockerfile .
       - name: Log in to docker hub
         run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         env:

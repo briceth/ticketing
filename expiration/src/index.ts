@@ -30,8 +30,6 @@ const start = async () => {
     process.on('SIGTERM', () => natsWrapper.client.close());
 
     new OrderCreatedListener(natsWrapper.client).listen();
-
-    console.log('connected to mongodb');
   } catch (error) {
     console.log(error);
   }

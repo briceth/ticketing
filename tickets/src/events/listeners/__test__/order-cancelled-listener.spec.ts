@@ -1,6 +1,6 @@
 import { Message } from 'node-nats-streaming';
 import mongoose from 'mongoose';
-import { OrderCancelledEvent, OrderStatus } from '@ms-ticketing-bth/common';
+import { OrderCancelledEvent } from '@ms-ticketing-bth/common';
 import { OrderCancelledListener } from '../order-cancelled-listener';
 import { natsWrapper } from '../../../nats-wrapper';
 import { Ticket } from '../../../models/ticket';

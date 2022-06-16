@@ -22,7 +22,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.3",
     "node-nats-streaming": "^0.3.2",
-    "stripe": "^9.6.0"
+    "stripe": "^9.6.0",
+    "zod": "^3.17.3"
   },
   "devDependencies": {
     "@types/cookie-session": "^2.0.44",

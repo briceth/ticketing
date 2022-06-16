@@ -1,20 +1,14 @@
 import mongoose from 'mongoose';
 import { app } from './app';
+import { serverConfig } from './config';
 
 const start = async () => {
   console.log('starting auth service ...');
 
-  if (!process.env.JWT_KEY) {
-    throw new Error('JWT_KEY must be defined');
-  }
-
-  if (!process.env.MONGO_URI) {
-    throw new Error('MONGO_URI must be defined');
-  }
+  const config = serverConfig(process.env);
 
   try {
-    // const url = `mongodb://${admin}:${password}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(config.MONGO_URI);
 
     console.log('connected to mongodb');
   } catch (error) {

@@ -1,27 +1,14 @@
+import { serverConfig } from './config';
 import { OrderCreatedListener } from './events/listener/order-created-listener';
 import { natsWrapper } from './nats-wrapper';
 
 const start = async () => {
   console.log('starting expiration service...');
 
-  if (!process.env.NATS_CLIENT_ID) {
-    throw new Error('NATS_CLIENT_ID must be defined');
-  }
-
-  if (!process.env.NATS_URL) {
-    throw new Error('NATS_URL must be defined');
-  }
-
-  if (!process.env.NATS_CLUSTER_ID) {
-    throw new Error('NATS_CLUSTER_ID must be defined');
-  }
+  const config = serverConfig(process.env);
 
   try {
-    await natsWrapper.connect(
-      process.env.NATS_CLUSTER_ID,
-      process.env.NATS_CLIENT_ID,
-      process.env.NATS_URL
-    );
+    await natsWrapper.connect(config.NATS_CLUSTER_ID, config.NATS_CLIENT_ID, config.NATS_URL);
     natsWrapper.client.on('close', () => {
       console.log('NATS connection closed!');
       process.exit();

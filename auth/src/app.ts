@@ -1,4 +1,5 @@
 import 'express-async-errors';
+import { serverConfig } from './config';
 import express from 'express';
 import cookieSession from 'cookie-session';
 import { json } from 'body-parser';
@@ -10,14 +11,15 @@ import { signupRouter } from './routes/signup';
 
 import { errorHandler, NotFoundError } from '@ms-ticketing-bth/common';
 
+const config = serverConfig(process.env);
+
 const app = express();
 app.set('trust proxy', true); // aware of ingress nginx
 app.use(json());
 app.use(
   cookieSession({
     signed: false,
-    secure: false,
-    // secure: process.env.NODE_ENV !== 'test',
+    secure: config.NODE_ENV !== 'test',
   })
 );
 

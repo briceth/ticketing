@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { app } from './app';
+import { serverConfig } from './config';
 import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
 import { OrderCreatedListener } from './events/listeners/order-created-listener';
 import { natsWrapper } from './nats-wrapper';
@@ -7,32 +8,10 @@ import { natsWrapper } from './nats-wrapper';
 const start = async () => {
   console.log('starting payments service...');
 
-  if (!process.env.JWT_KEY) {
-    throw new Error('JWT_KEY must be defined');
-  }
-
-  if (!process.env.MONGO_URI) {
-    throw new Error('MONGO_URI must be defined');
-  }
-
-  if (!process.env.NATS_CLIENT_ID) {
-    throw new Error('NATS_CLIENT_ID must be defined');
-  }
-
-  if (!process.env.NATS_URL) {
-    throw new Error('NATS_URL must be defined');
-  }
-
-  if (!process.env.NATS_CLUSTER_ID) {
-    throw new Error('NATS_CLUSTER_ID must be defined');
-  }
+  const config = serverConfig(process.env);
 
   try {
-    await natsWrapper.connect(
-      process.env.NATS_CLUSTER_ID,
-      process.env.NATS_CLIENT_ID,
-      process.env.NATS_URL
-    );
+    await natsWrapper.connect(config.NATS_CLUSTER_ID, config.NATS_CLIENT_ID, config.NATS_URL);
     natsWrapper.client.on('close', () => {
       console.log('NATS connection closed!');
       process.exit();
@@ -44,7 +23,7 @@ const start = async () => {
     new OrderCancelledListener(natsWrapper.client).listen();
 
     // const url = `mongodb://${admin}:${password}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
-    await mongoose.connect(process.env.MONGO_URI);
+    await mongoose.connect(config.MONGO_URI);
 
     console.log('connected to mongodb');
   } catch (error) {

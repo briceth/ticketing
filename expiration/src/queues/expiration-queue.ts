@@ -1,4 +1,5 @@
 import Queue from 'bull';
+import { serverConfig } from '../config';
 import { ExpirationCompletePublisher } from '../events/publishers/expiration-complete-publisher';
 import { natsWrapper } from '../nats-wrapper';
 
@@ -6,9 +7,11 @@ interface Payload {
   orderId: string;
 }
 
+const config = serverConfig(process.env);
+
 const expirationQueue = new Queue<Payload>('order:expiration', {
   redis: {
-    host: process.env.REDIS_HOST,
+    host: config.REDIS_HOST,
   },
 });
 

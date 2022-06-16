@@ -12,30 +12,29 @@ const start = async () => {
 
   const config = serverConfig(process.env);
 
-  try {
-    await natsWrapper.connect(config.NATS_CLUSTER_ID, config.NATS_CLIENT_ID, config.NATS_URL);
-    natsWrapper.client.on('close', () => {
-      console.log('NATS connection closed!');
-      process.exit();
-    });
-    process.on('SIGINT', () => natsWrapper.client.close());
-    process.on('SIGTERM', () => natsWrapper.client.close());
+  await natsWrapper.connect(config.NATS_CLUSTER_ID, config.NATS_CLIENT_ID, config.NATS_URL);
+  natsWrapper.client.on('close', () => {
+    console.log('NATS connection closed!');
+    process.exit();
+  });
+  process.on('SIGINT', () => natsWrapper.client.close());
+  process.on('SIGTERM', () => natsWrapper.client.close());
 
-    new TicketCreatedListener(natsWrapper.client).listen();
-    new TicketUpdatedListener(natsWrapper.client).listen();
-    new ExpirationCompleteListener(natsWrapper.client).listen();
-    new PaymentCreatedListener(natsWrapper.client).listen();
+  new TicketCreatedListener(natsWrapper.client).listen();
+  new TicketUpdatedListener(natsWrapper.client).listen();
+  new ExpirationCompleteListener(natsWrapper.client).listen();
+  new PaymentCreatedListener(natsWrapper.client).listen();
 
-    await mongoose.connect(config.MONGO_URI);
+  await mongoose.connect(config.MONGO_URI);
 
-    console.log('connected to mongodb');
-  } catch (error) {
-    console.log(error);
-  }
+  console.log('connected to mongodb');
 
   app.listen(3000, () => {
     console.log('Listening on port 3000.');
   });
 };
 
-start();
+start().catch((error) => {
+  console.log(error);
+  process.exit();
+});

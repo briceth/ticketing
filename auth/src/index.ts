@@ -7,17 +7,16 @@ const start = async () => {
 
   const config = serverConfig(process.env);
 
-  try {
-    await mongoose.connect(config.MONGO_URI);
+  await mongoose.connect(config.MONGO_URI);
 
-    console.log('connected to mongodb');
-  } catch (error) {
-    console.log(error);
-  }
+  console.log('connected to mongodb');
 
   app.listen(3000, () => {
     console.log('Listening on port 3000.');
   });
 };
 
-start();
+start().catch((error) => {
+  console.log(error);
+  process.exit();
+});

@@ -7,19 +7,18 @@ const start = async () => {
 
   const config = serverConfig(process.env);
 
-  try {
-    await natsWrapper.connect(config.NATS_CLUSTER_ID, config.NATS_CLIENT_ID, config.NATS_URL);
-    natsWrapper.client.on('close', () => {
-      console.log('NATS connection closed!');
-      process.exit();
-    });
-    process.on('SIGINT', () => natsWrapper.client.close());
-    process.on('SIGTERM', () => natsWrapper.client.close());
+  await natsWrapper.connect(config.NATS_CLUSTER_ID, config.NATS_CLIENT_ID, config.NATS_URL);
+  natsWrapper.client.on('close', () => {
+    console.log('NATS connection closed!');
+    process.exit();
+  });
+  process.on('SIGINT', () => natsWrapper.client.close());
+  process.on('SIGTERM', () => natsWrapper.client.close());
 
-    new OrderCreatedListener(natsWrapper.client).listen();
-  } catch (error) {
-    console.log(error);
-  }
+  new OrderCreatedListener(natsWrapper.client).listen();
 };
 
-start();
+start().catch((error) => {
+  console.log(error);
+  process.exit();
+});

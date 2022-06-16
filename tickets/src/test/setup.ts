@@ -3,7 +3,6 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import jwt from 'jsonwebtoken';
 
 declare global {
-  // eslint-disable-next-line no-var
   var signin: (userId?: string) => string[];
 }
 
@@ -51,9 +50,4 @@ global.signin = (userId?: string) => {
   const base64 = Buffer.from(sessionJSON).toString('base64');
 
   return [`express:sess=${base64}`];
-};
-
-global.console = {
-  ...console,
-  log: jest.fn(),
 };

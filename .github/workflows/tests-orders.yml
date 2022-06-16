@@ -6,8 +6,74 @@ on:
       - orders/**
 
 jobs:
-  build:
+  dependencies:
+    name: Install dependencies & cache
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: cd orders && npm install && npm run test:ci
+      - uses: actions/checkout@v3
+
+      - name: Cache node modules
+        id: npm-cache-dir
+        uses: actions/cache@v3
+        with:
+          path: orders/node_modules
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+
+      - name: Install dependencies
+        if: steps.npm-cache-dir.outputs.cache-hit != 'true'
+        run: cd orders && npm ci
+
+  lint:
+    needs: [dependencies]
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get node modules cache
+        id: npm-cache-dir
+        uses: actions/cache@v3
+        with:
+          path: orders/node_modules
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+
+      - name: Lint code
+        run: cd orders && npm run lint
+
+  test_unit:
+    needs: [dependencies]
+    name: Test unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get node modules cache
+        id: npm-cache-dir
+        uses: actions/cache@v3
+        with:
+          path: orders/node_modules
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+
+      - name: Tests units
+        run: cd orders && npm run test:unit
+
+  test_integration:
+    needs: [dependencies]
+    name: Test integration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get node modules cache
+        id: npm-cache-dir
+        uses: actions/cache@v3
+        with:
+          path: orders/node_modules
+          key: npm-${{ hashFiles('package-lock.json') }}
+          restore-keys: npm-
+
+      - name: Tests integrations
+        run: cd orders && npm run test:integration

@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+
 import { serverConfig } from './config';
 import { app } from './app';
-import { natsWrapper } from './nats-wrapper';
-import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
-import { OrderCreatedListener } from './events/listeners/order-created-listener';
+import { natsWrapper } from './natsWrapper';
+import { OrderCancelledListener } from './events/listeners/orderCancelledListener';
+import { OrderCreatedListener } from './events/listeners/orderCreatedListener';
 
 const start = async () => {
   console.log('starting tickets service...');
@@ -22,7 +23,6 @@ const start = async () => {
   new OrderCancelledListener(natsWrapper.client).listen();
 
   await mongoose.connect(config.MONGO_URI);
-
   console.log('connected to mongodb');
 
   app.listen(3000, () => {

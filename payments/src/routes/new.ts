@@ -1,36 +1,42 @@
 import express, { Request, Response } from 'express';
-import { body } from 'express-validator';
+import { z } from 'zod';
 import {
   BadRequestError,
-  NotAuthorizedError,
+  UnauthorizedError,
   NotFoundError,
   OrderStatus,
   requireAuth,
   validateRequest,
 } from '@ms-ticketing-bth/common';
-import { PaymentCreatedPublisher } from '../events/publishers/payment-created-publisher';
+import { PaymentCreatedPublisher } from '../events/publishers/paymentCreatedPublisher';
 import { Order } from '../models/order';
 import { Payment } from '../models/payment';
-import { natsWrapper } from '../nats-wrapper';
+import { natsWrapper } from '../natsWrapper';
 import { stripe } from '../stripe';
 
 const router = express.Router();
 
+const schema = z.object({
+  body: z.object({
+    token: z.string({ required_error: 'token id is required' }).min(1),
+    orderId: z.string({ required_error: 'orderId id is required' }).min(1),
+  }),
+});
+
 router.post(
   '/api/payments',
   requireAuth,
-  [body('token').not().isEmpty(), body('orderId').not().isEmpty()],
-  validateRequest,
+  validateRequest(schema),
   async (req: Request, res: Response) => {
     const { token, orderId } = req.body;
 
     const order = await Order.findById(orderId);
     if (!order) {
-      throw new NotFoundError();
+      throw new NotFoundError('order not found');
     }
 
     if (order.userId !== req.currentUser!.id) {
-      throw new NotAuthorizedError();
+      throw new UnauthorizedError('User is not authorized to initiate this payment');
     }
 
     if (order.status === OrderStatus.Cancelled) {
@@ -46,7 +52,7 @@ router.post(
     const payment = Payment.build({ orderId, stripeId: charge.id });
     await payment.save();
 
-    new PaymentCreatedPublisher(natsWrapper.client).publish({
+    await new PaymentCreatedPublisher(natsWrapper.client).publish({
       id: payment.id,
       orderId: payment.orderId,
       stripeId: payment.stripeId,

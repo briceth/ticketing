@@ -1,7 +1,7 @@
 import { Listener, Subjects, TicketCreatedEvent } from '@ms-ticketing-bth/common';
 import { Message } from 'node-nats-streaming';
 import { Ticket } from '../../models/ticket';
-import { queueGroupName } from './queue-group-name';
+import { queueGroupName } from './queueGroupName';
 
 export class TicketCreatedListener extends Listener<TicketCreatedEvent> {
   readonly subject = Subjects.TicketCreated;

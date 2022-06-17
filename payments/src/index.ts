@@ -1,9 +1,9 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { serverConfig } from './config';
-import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
-import { OrderCreatedListener } from './events/listeners/order-created-listener';
-import { natsWrapper } from './nats-wrapper';
+import { OrderCancelledListener } from './events/listeners/orderCancelledListener';
+import { OrderCreatedListener } from './events/listeners/orderCreatedListener';
+import { natsWrapper } from './natsWrapper';
 
 const start = async () => {
   console.log('starting payments service...');
@@ -21,7 +21,6 @@ const start = async () => {
   new OrderCreatedListener(natsWrapper.client).listen();
   new OrderCancelledListener(natsWrapper.client).listen();
 
-  // const url = `mongodb://${admin}:${password}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
   await mongoose.connect(config.MONGO_URI);
 
   console.log('connected to mongodb');

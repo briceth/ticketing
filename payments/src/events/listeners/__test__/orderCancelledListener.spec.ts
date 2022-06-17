@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { Message } from 'node-nats-streaming';
 import { OrderStatus, OrderCancelledEvent } from '@ms-ticketing-bth/common';
-import { OrderCancelledListener } from '../order-cancelled-listener';
-import { natsWrapper } from '../../../nats-wrapper';
+import { OrderCancelledListener } from '../orderCancelledListener';
+import { natsWrapper } from '../../../natsWrapper';
 import { Order } from '../../../models/order';
 
 const setup = async () => {

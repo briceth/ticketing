@@ -1,6 +1,6 @@
 import { serverConfig } from './config';
-import { OrderCreatedListener } from './events/listener/order-created-listener';
-import { natsWrapper } from './nats-wrapper';
+import { OrderCreatedListener } from './events/listener/orderCreatedListener';
+import { natsWrapper } from './natsWrapper';
 
 const start = async () => {
   console.log('starting expiration service...');

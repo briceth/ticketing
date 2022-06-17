@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { Message } from 'node-nats-streaming';
 import { OrderStatus, ExpirationCompleteEvent } from '@ms-ticketing-bth/common';
-import { ExpirationCompleteListener } from '../expiration-complete-listener';
-import { natsWrapper } from '../../../nats-wrapper';
+import { ExpirationCompleteListener } from '../expirationCompleteListener';
+import { natsWrapper } from '../../../natsWrapper';
 import { Order } from '../../../models/order';
 import { Ticket } from '../../../models/ticket';
 

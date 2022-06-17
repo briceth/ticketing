@@ -1,8 +1,8 @@
 import { Listener, Subjects, ExpirationCompleteEvent, OrderStatus } from '@ms-ticketing-bth/common';
 import { Message } from 'node-nats-streaming';
 import { Order } from '../../models/order';
-import { OrderCancelledPublisher } from '../publishers/order-cancelled-publisher';
-import { queueGroupName } from './queue-group-name';
+import { OrderCancelledPublisher } from '../publishers/orderCancelledPublisher';
+import { queueGroupName } from './queueGroupName';
 
 export class ExpirationCompleteListener extends Listener<ExpirationCompleteEvent> {
   readonly subject = Subjects.ExpirationComplete;

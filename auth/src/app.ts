@@ -1,15 +1,16 @@
 import 'express-async-errors';
-import { serverConfig } from './config';
 import express from 'express';
-import cookieSession from 'cookie-session';
 import { json } from 'body-parser';
+import cookieSession from 'cookie-session';
 
-import { currentUserRouter } from './routes/current-user';
+import { serverConfig } from './config';
+
+import { errorHandler, NotFoundError } from '@ms-ticketing-bth/common';
+
+import { currentUserRouter } from './routes/currentUser';
 import { signinRouter } from './routes/signin';
 import { signoutRouter } from './routes/signout';
 import { signupRouter } from './routes/signup';
-
-import { errorHandler, NotFoundError } from '@ms-ticketing-bth/common';
 
 const config = serverConfig(process.env);
 
@@ -29,7 +30,7 @@ app.use(signoutRouter);
 app.use(signupRouter);
 
 app.all('*', () => {
-  throw new NotFoundError();
+  throw new NotFoundError('not found');
 });
 
 app.use(errorHandler);

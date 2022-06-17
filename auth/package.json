@@ -8,17 +8,19 @@
     "dev": "ts-node-dev ./src/index.ts",
     "start": "node ./build/index.js",
     "build": "tsc --project ./tsconfig.build.json",
-    "test": "NODE_ENV=test jest --watchAll --no-cache --color --runInBand",
-    "test:coverage": "npm run test -- --coverage",
     "lint": "eslint --ext .ts .",
-    "test:ci": "jest"
+    "lint-fix": "npm run lint -- --fix",
+    "test": "jest --watchAll --no-cache",
+    "test:unit": "jest -c jest.unit.config.ts --runInBand --no-cache",
+    "test:integration": "jest -c jest.integration.config.ts --runInBand --no-cache",
+    "test:coverage": "jest --no-cache --coverage"
   },
   "dependencies": {
-    "@ms-ticketing-bth/common": "^1.0.3",
+    "@ms-ticketing-bth/common": "^1.0.14",
     "cookie-session": "^1.4.0",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
-    "express-validator": "^6.14.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.3.3",
     "zod": "^3.17.3"

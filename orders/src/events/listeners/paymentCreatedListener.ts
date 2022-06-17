@@ -1,7 +1,7 @@
 import { Listener, OrderStatus, PaymentCreatedEvent, Subjects } from '@ms-ticketing-bth/common';
 import { Message } from 'node-nats-streaming';
 import { Order } from '../../models/order';
-import { queueGroupName } from './queue-group-name';
+import { queueGroupName } from './queueGroupName';
 
 export class PaymentCreatedListener extends Listener<PaymentCreatedEvent> {
   readonly subject = Subjects.PaymentCreated;

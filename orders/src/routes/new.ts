@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { body } from 'express-validator';
+import { z } from 'zod';
 import {
   BadRequestError,
   NotFoundError,
@@ -11,25 +11,30 @@ import {
 import { Order } from '../models/order';
 import { Ticket } from '../models/ticket';
 
-import { OrderCreatedPublisher } from '../events/publishers/order-created-publisher';
-import { natsWrapper } from '../nats-wrapper';
+import { OrderCreatedPublisher } from '../events/publishers/orderCreatedPublisher';
+import { natsWrapper } from '../natsWrapper';
 
 const router = express.Router();
 
 // env var
 const EXPIRATION_WINDOW_SECONDS = 1 * 60;
 
+const schema = z.object({
+  body: z.object({
+    ticketId: z.string({ required_error: 'ticketId is required' }).min(1),
+  }),
+});
+
 router.post(
   '/api/orders',
   requireAuth,
-  [body('ticketId').not().isEmpty().withMessage('TicketId must be provided')],
-  validateRequest,
+  validateRequest(schema),
   async (req: Request, res: Response) => {
     const { ticketId } = req.body;
 
     const ticket = await Ticket.findById(ticketId);
     if (!ticket) {
-      throw new NotFoundError();
+      throw new NotFoundError('ticket not found');
     }
 
     const isReserved = await ticket.isReserved();
@@ -47,7 +52,8 @@ router.post(
       ticket: ticket.id,
     });
     await order.save();
-    new OrderCreatedPublisher(natsWrapper.client).publish({
+
+    await new OrderCreatedPublisher(natsWrapper.client).publish({
       id: order.id,
       version: order.version,
       status: order.status,

@@ -5,6 +5,7 @@ import cookieSession from 'cookie-session';
 import { json } from 'body-parser';
 
 import { currentUser, errorHandler, NotFoundError } from '@ms-ticketing-bth/common';
+
 import { createTicketRouter } from './routes/new';
 import { showTicketRouter } from './routes/show';
 import { indexTicketRouter } from './routes/index';
@@ -29,7 +30,7 @@ app.use(indexTicketRouter);
 app.use(updateTicketRouter);
 
 app.all('*', () => {
-  throw new NotFoundError();
+  throw new NotFoundError('not found');
 });
 
 app.use(errorHandler);

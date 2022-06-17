@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { Message } from 'node-nats-streaming';
 import { OrderCreatedEvent, OrderStatus } from '@ms-ticketing-bth/common';
-import { natsWrapper } from '../../../nats-wrapper';
-import { OrderCreatedListener } from '../order-created-listener';
+import { natsWrapper } from '../../../natsWrapper';
+import { OrderCreatedListener } from '../orderCreatedListener';
 import { Order } from '../../../models/order';
 
 const setup = async () => {

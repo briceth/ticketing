@@ -34,10 +34,13 @@ global.signin = async () => {
   const email = 'test@test.com';
   const password = 'password';
 
-  const response = await request(app)
-    .post('/api/users/signup')
-    .send({ email, password });
+  const response = await request(app).post('/api/users/signup').send({ email, password });
 
   const cookie = response.get('Set-Cookie');
   return cookie;
+};
+
+global.console = {
+  ...console,
+  log: jest.fn(),
 };

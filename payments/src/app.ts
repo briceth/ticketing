@@ -23,7 +23,7 @@ app.use(currentUser);
 app.use(createChargeRouter);
 
 app.all('*', () => {
-  throw new NotFoundError();
+  throw new NotFoundError('not found');
 });
 
 app.use(errorHandler);

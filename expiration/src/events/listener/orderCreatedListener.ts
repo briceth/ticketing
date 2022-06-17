@@ -1,6 +1,6 @@
 import { Listener, OrderCreatedEvent, OrderStatus, Subjects } from '@ms-ticketing-bth/common';
 import { Message } from 'node-nats-streaming';
-import { expirationQueue } from '../../queues/expiration-queue';
+import { expirationQueue } from '../../queues/expiration';
 import { queueGroupName } from './queueGroupName';
 
 export class OrderCreatedListener extends Listener<OrderCreatedEvent> {

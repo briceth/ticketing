@@ -29,7 +29,7 @@ app.use(indexOrderRouter);
 app.use(deleteOrderRouter);
 
 app.all('*', () => {
-  throw new NotFoundError();
+  throw new NotFoundError('not found');
 });
 
 app.use(errorHandler);

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
-import { app } from './app';
+
 import { serverConfig } from './config';
+import { app } from './app';
 
 const start = async () => {
   console.log('starting auth service ...');
@@ -8,7 +9,6 @@ const start = async () => {
   const config = serverConfig(process.env);
 
   await mongoose.connect(config.MONGO_URI);
-
   console.log('connected to mongodb');
 
   app.listen(3000, () => {

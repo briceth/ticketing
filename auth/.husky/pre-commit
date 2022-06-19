@@ -1,0 +1,2 @@
+cd auth
+npx lint-staged

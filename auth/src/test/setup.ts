@@ -4,6 +4,7 @@ import request from 'supertest';
 import { app } from '../app';
 
 declare global {
+  // eslint-disable-next-line no-var
   var signin: () => Promise<string[]>;
 }
 

@@ -7,7 +7,7 @@ import { OrderCancelledListener } from './events/listeners/orderCancelledListene
 import { OrderCreatedListener } from './events/listeners/orderCreatedListener';
 
 const start = async () => {
-  console.log('starting tickets service...');
+  console.log('starting tickets service..');
 
   const config = serverConfig(process.env);
 

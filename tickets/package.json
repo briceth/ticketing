@@ -19,7 +19,10 @@
     "prepare": "cd .. && husky install tickets/.husky"
   },
   "lint-staged": {
-    "src/**/*.ts": "prettier --write --ignore-unknown"
+    "src/**/*.ts": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@ms-ticketing-bth/common": "^1.0.14",

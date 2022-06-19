@@ -1,0 +1,2 @@
+cd tickets
+npx lint-staged

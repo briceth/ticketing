@@ -6,7 +6,7 @@ import { OrderCreatedListener } from './events/listeners/orderCreatedListener';
 import { natsWrapper } from './natsWrapper';
 
 const start = async () => {
-  console.log('starting payments service...');
+  console.log('starting payments service....');
 
   const config = serverConfig(process.env);
 

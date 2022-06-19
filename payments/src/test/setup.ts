@@ -3,6 +3,7 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import jwt from 'jsonwebtoken';
 
 declare global {
+  // eslint-disable-next-line no-var
   var signin: (userId?: string) => string[];
 }
 

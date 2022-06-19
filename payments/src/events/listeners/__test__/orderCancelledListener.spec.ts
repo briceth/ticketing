@@ -44,7 +44,7 @@ it('updates the status of the order', async () => {
 });
 
 it('acks the message', async () => {
-  const { listener, data, msg, order } = await setup();
+  const { listener, data, msg } = await setup();
 
   await listener.onMessage(data, msg);
 

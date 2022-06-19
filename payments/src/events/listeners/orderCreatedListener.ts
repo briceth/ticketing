@@ -1,4 +1,4 @@
-import { Listener, OrderCreatedEvent, OrderStatus, Subjects } from '@ms-ticketing-bth/common';
+import { Listener, OrderCreatedEvent, Subjects } from '@ms-ticketing-bth/common';
 import { Message } from 'node-nats-streaming';
 import { Order } from '../../models/order';
 import { queueGroupName } from './queueGroupName';

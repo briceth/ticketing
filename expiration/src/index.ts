@@ -1,40 +1,24 @@
-import { OrderCreatedListener } from './events/listener/order-created-listener';
-import { natsWrapper } from './nats-wrapper';
+import { serverConfig } from './config';
+import { OrderCreatedListener } from './events/listener/orderCreatedListener';
+import { natsWrapper } from './natsWrapper';
 
 const start = async () => {
   console.log('starting expiration service...');
 
-  if (!process.env.NATS_CLIENT_ID) {
-    throw new Error('NATS_CLIENT_ID must be defined');
-  }
+  const config = serverConfig(process.env);
 
-  if (!process.env.NATS_URL) {
-    throw new Error('NATS_URL must be defined');
-  }
+  await natsWrapper.connect(config.NATS_CLUSTER_ID, config.NATS_CLIENT_ID, config.NATS_URL);
+  natsWrapper.client.on('close', () => {
+    console.log('NATS connection closed!');
+    process.exit();
+  });
+  process.on('SIGINT', () => natsWrapper.client.close());
+  process.on('SIGTERM', () => natsWrapper.client.close());
 
-  if (!process.env.NATS_CLUSTER_ID) {
-    throw new Error('NATS_CLUSTER_ID must be defined');
-  }
-
-  try {
-    await natsWrapper.connect(
-      process.env.NATS_CLUSTER_ID,
-      process.env.NATS_CLIENT_ID,
-      process.env.NATS_URL
-    );
-    natsWrapper.client.on('close', () => {
-      console.log('NATS connection closed!');
-      process.exit();
-    });
-    process.on('SIGINT', () => natsWrapper.client.close());
-    process.on('SIGTERM', () => natsWrapper.client.close());
-
-    new OrderCreatedListener(natsWrapper.client).listen();
-
-    console.log('connected to mongodb');
-  } catch (error) {
-    console.log(error);
-  }
+  new OrderCreatedListener(natsWrapper.client).listen();
 };
 
-start();
+start().catch((error) => {
+  console.log(error);
+  process.exit();
+});

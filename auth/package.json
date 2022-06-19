@@ -8,19 +8,31 @@
     "dev": "ts-node-dev ./src/index.ts",
     "start": "node ./build/index.js",
     "build": "tsc --project ./tsconfig.build.json",
-    "test": "NODE_ENV=test jest --watchAll --no-cache --color --runInBand",
-    "test:coverage": "npm run test -- --coverage",
+    "format": "prettier --check 'src/**/*.ts'",
+    "format:fix": "prettier --write 'src/**/*.ts'",
     "lint": "eslint --ext .ts .",
-    "test:ci": "jest"
+    "lint-fix": "npm run lint -- --fix",
+    "test": "jest --watchAll --no-cache",
+    "test:unit": "jest -c jest.unit.config.ts --runInBand --no-cache",
+    "test:integration": "jest -c jest.integration.config.ts --runInBand --no-cache",
+    "test:coverage": "jest --no-cache --coverage",
+    "prepare": "cd .. && husky install auth/.husky"
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
-    "@ms-ticketing-bth/common": "^1.0.3",
+    "@ms-ticketing-bth/common": "^1.0.14",
     "cookie-session": "^1.4.0",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
-    "express-validator": "^6.14.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.3.3"
+    "mongoose": "^6.3.3",
+    "zod": "^3.17.3"
   },
   "devDependencies": {
     "@jest/types": "^28.1.1",
@@ -29,8 +41,15 @@
     "@types/jest": "^27.5.1",
     "@types/jsonwebtoken": "^8.5.8",
     "@types/supertest": "^2.0.12",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "eslint": "^8.18.0",
+    "eslint-config-prettier": "^8.5.0",
+    "husky": "^8.0.1",
     "jest": "^28.1.0",
+    "lint-staged": "^13.0.2",
     "mongodb-memory-server": "^8.5.2",
+    "prettier": "2.7.1",
     "supertest": "^6.2.3",
     "ts-jest": "^28.0.2",
     "ts-node-dev": "^2.0.0",

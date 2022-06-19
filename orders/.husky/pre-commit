@@ -1,0 +1,2 @@
+cd orders
+npx lint-staged

@@ -1,59 +1,36 @@
 import mongoose from 'mongoose';
 import { app } from './app';
-import { OrderCancelledListener } from './events/listeners/order-cancelled-listener';
-import { OrderCreatedListener } from './events/listeners/order-created-listener';
-import { natsWrapper } from './nats-wrapper';
+import { serverConfig } from './config';
+import { OrderCancelledListener } from './events/listeners/orderCancelledListener';
+import { OrderCreatedListener } from './events/listeners/orderCreatedListener';
+import { natsWrapper } from './natsWrapper';
 
 const start = async () => {
-  console.log('starting payments service...');
+  console.log('starting payments service....');
 
-  if (!process.env.JWT_KEY) {
-    throw new Error('JWT_KEY must be defined');
-  }
+  const config = serverConfig(process.env);
 
-  if (!process.env.MONGO_URI) {
-    throw new Error('MONGO_URI must be defined');
-  }
+  await natsWrapper.connect(config.NATS_CLUSTER_ID, config.NATS_CLIENT_ID, config.NATS_URL);
+  natsWrapper.client.on('close', () => {
+    console.log('NATS connection closed!');
+    process.exit();
+  });
+  process.on('SIGINT', () => natsWrapper.client.close());
+  process.on('SIGTERM', () => natsWrapper.client.close());
 
-  if (!process.env.NATS_CLIENT_ID) {
-    throw new Error('NATS_CLIENT_ID must be defined');
-  }
+  new OrderCreatedListener(natsWrapper.client).listen();
+  new OrderCancelledListener(natsWrapper.client).listen();
 
-  if (!process.env.NATS_URL) {
-    throw new Error('NATS_URL must be defined');
-  }
+  await mongoose.connect(config.MONGO_URI);
 
-  if (!process.env.NATS_CLUSTER_ID) {
-    throw new Error('NATS_CLUSTER_ID must be defined');
-  }
-
-  try {
-    await natsWrapper.connect(
-      process.env.NATS_CLUSTER_ID,
-      process.env.NATS_CLIENT_ID,
-      process.env.NATS_URL
-    );
-    natsWrapper.client.on('close', () => {
-      console.log('NATS connection closed!');
-      process.exit();
-    });
-    process.on('SIGINT', () => natsWrapper.client.close());
-    process.on('SIGTERM', () => natsWrapper.client.close());
-
-    new OrderCreatedListener(natsWrapper.client).listen();
-    new OrderCancelledListener(natsWrapper.client).listen();
-
-    // const url = `mongodb://${admin}:${password}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_DB}?authSource=admin`;
-    await mongoose.connect(process.env.MONGO_URI);
-
-    console.log('connected to mongodb');
-  } catch (error) {
-    console.log(error);
-  }
+  console.log('connected to mongodb');
 
   app.listen(3000, () => {
     console.log('Listening on port 3000.');
   });
 };
 
-start();
+start().catch((error) => {
+  console.log(error);
+  process.exit();
+});

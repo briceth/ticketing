@@ -8,20 +8,39 @@
     "dev": "ts-node-dev ./src/index.ts",
     "start": "node ./build/index.js",
     "build": "tsc --project ./tsconfig.build.json",
-    "test": "NODE_ENV=test jest --watchAll --no-cache --color --runInBand",
-    "test:coverage": "npm run test -- --coverage",
+    "format": "prettier --check 'src/**/*.ts'",
+    "format:fix": "prettier --write 'src/**/*.ts'",
     "lint": "eslint --ext .ts .",
-    "test:ci": "jest"
+    "lint:fix": "npm run lint -- --fix",
+    "test": "jest --watchAll --no-cache",
+    "test:unit": "jest -c jest.unit.config.ts --runInBand --no-cache",
+    "test:coverage": "jest --no-cache --coverage",
+    "prepare": "cd .. && husky install expiration/.husky"
+  },
+  "lint-staged": {
+    "src/**/*.ts": [
+      "eslint --cache --fix",
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@ms-ticketing-bth/common": "^1.0.10",
     "bull": "^4.8.3",
-    "node-nats-streaming": "^0.3.2"
+    "dotenv": "^16.0.1",
+    "node-nats-streaming": "^0.3.2",
+    "zod": "^3.17.3"
   },
   "devDependencies": {
     "@types/bull": "^3.15.8",
     "@types/jest": "^27.5.1",
+    "@typescript-eslint/eslint-plugin": "^5.28.0",
+    "@typescript-eslint/parser": "^5.28.0",
+    "eslint": "^8.18.0",
+    "eslint-config-prettier": "^8.5.0",
+    "husky": "^8.0.1",
     "jest": "^28.1.0",
+    "lint-staged": "^13.0.2",
+    "prettier": "2.7.1",
     "ts-jest": "^28.0.2",
     "ts-node-dev": "^2.0.0",
     "typescript": "^4.6.4"

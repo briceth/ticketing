@@ -7,7 +7,7 @@ declare global {
   var signin: (userId?: string) => string[];
 }
 
-jest.mock('../nats-wrapper.ts');
+jest.mock('../natsWrapper.ts');
 
 let mongo: MongoMemoryServer;
 beforeAll(async () => {

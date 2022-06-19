@@ -1,16 +1,23 @@
 import express, { Request, Response } from 'express';
-import { NotFoundError } from '@ms-ticketing-bth/common';
+import { NotFoundError, validateRequest } from '@ms-ticketing-bth/common';
 import { Ticket } from '../models/ticket';
+import { z } from 'zod';
 
 const router = express.Router();
 
-router.get('/api/tickets/:id', async (req: Request, res: Response) => {
+const schema = z.object({
+  params: z.object({
+    id: z.string({ required_error: 'valid id is required' }).length(24),
+  }),
+});
+
+router.get('/api/tickets/:id', validateRequest(schema), async (req: Request, res: Response) => {
   const { id } = req.params;
 
   const ticket = await Ticket.findById(id);
 
   if (!ticket) {
-    throw new NotFoundError();
+    throw new NotFoundError('Ticket not found');
   }
 
   res.send(ticket);

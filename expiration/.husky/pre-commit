@@ -1,0 +1,2 @@
+cd expiration
+npx lint-staged

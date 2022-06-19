@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket';
-import { natsWrapper } from '../../nats-wrapper';
+import { natsWrapper } from '../../natsWrapper';
 
 const createTicket = async ({ userId }: { userId?: string } = {}) => {
   const id = new mongoose.Types.ObjectId().toHexString();

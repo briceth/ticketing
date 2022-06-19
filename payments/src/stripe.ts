@@ -1,6 +1,9 @@
 import Stripe from 'stripe';
+import { serverConfig } from './config';
 
-export const stripe = new Stripe(process.env.STRIPE_KEY!, {
+const config = serverConfig(process.env);
+
+export const stripe = new Stripe(config.STRIPE_KEY, {
   apiVersion: '2020-08-27',
   typescript: true,
 });

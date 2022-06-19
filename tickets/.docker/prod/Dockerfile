@@ -12,7 +12,7 @@ WORKDIR ${APP_DIR}
 COPY package.json package-lock.json tsconfig.json tsconfig.build.json ./
 COPY src ./src
 
-RUN npm ci --production
+RUN npm ci --omit=dev --ignore-scripts
 
 ################################
 #  Prod Dependencies Container #

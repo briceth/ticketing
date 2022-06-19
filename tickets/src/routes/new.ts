@@ -1,20 +1,23 @@
 import express, { Request, Response } from 'express';
+import { z } from 'zod';
 import { requireAuth, validateRequest } from '@ms-ticketing-bth/common';
-import { body } from 'express-validator';
 import { Ticket } from '../models/ticket';
-import { TicketCreatedPublisher } from '../events/publishers/ticket-created-publisher';
-import { natsWrapper } from '../nats-wrapper';
+import { TicketCreatedPublisher } from '../events/publishers/ticketCreatedPublisher';
+import { natsWrapper } from '../natsWrapper';
 
 const router = express.Router();
+
+const schema = z.object({
+  body: z.object({
+    title: z.string({ required_error: 'title is required' }).min(1),
+    price: z.number({ required_error: 'price must be greater than 5' }).gt(5),
+  }),
+});
 
 router.post(
   '/api/tickets',
   requireAuth,
-  [
-    body('title').not().isEmpty().withMessage('Title is required'),
-    body('price').isFloat({ gt: 0 }).withMessage('Price must be greater than 0'),
-  ],
-  validateRequest,
+  validateRequest(schema),
   async (req: Request, res: Response) => {
     const { title, price } = req.body;
 
